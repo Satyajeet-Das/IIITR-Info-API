@@ -96,44 +96,6 @@ async def fetch_iiitr_administration():
 
     data = await page.evaluate('''
         () => {
-            function getTextAfterHeading(headingText) {
-                const headings = Array.from(document.querySelectorAll("h2, h3, h4"));
-                for (let h of headings) {
-                    if (h.innerText.trim().includes(headingText)) {
-                        let nextElem = h.nextElementSibling;
-                        let textContent = "";
-                        while (nextElem && !["H2", "H3", "H4"].includes(nextElem.tagName)) {
-                            textContent += nextElem.innerText.trim() + " ";
-                            nextElem = nextElem.nextElementSibling;
-                        }
-                        return textContent.trim() || "Not Found";
-                    }
-                }
-                return "Not Found";
-            }
-
-            return {
-                title: document.title || "No Title",
-                description: document.querySelector("meta[name='description']")?.content || "No Description",
-                main_text: document.querySelector("p")?.innerText.trim() || "No Main Text",
-                video_link: document.querySelector("iframe")?.getAttribute("src") || "Not Found",
-                image: document.querySelector("img")?.getAttribute("src") || "Not Found",
-                custom_data: getTextAfterHeading("Custom Section")  // Modify as needed
-            };
-        }
-    ''')
-
-    await page.close()
-    return data
-
-async def fetch_iiitr_administration():
-    """Generic function to scrape data from a given page."""
-    page = await browser.newPage()
-    await page.setUserAgent(USER_AGENT)
-    await page.goto("https://iiitr.ac.in/administration", {"waitUntil": "networkidle2"})
-
-    data = await page.evaluate('''
-        () => {
             let tables = document.querySelectorAll("#customers"); 
             let structuredData = {
                 activeMembers: [],
